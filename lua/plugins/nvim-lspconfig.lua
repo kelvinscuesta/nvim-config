@@ -47,7 +47,7 @@ return {
           if vim.fn.has 'nvim-0.11' == 1 then
             return client:supports_method(method, bufnr)
           else
-            return client.supports_method(method, { bufnr = bufnr })
+            return client:supports_method(method, { bufnr = bufnr })
           end
         end
 
@@ -90,6 +90,18 @@ return {
           end, '[T]oggle Inlay [H]ints')
           vim.lsp.inlay_hint.enable(true)
         end
+        -- toggle inlay hints off when entering insert and toggle on when leaving
+        vim.api.nvim_create_autocmd('InsertEnter', {
+          callback = function()
+            vim.lsp.inlay_hint.enable(false)
+          end,
+        })
+
+        vim.api.nvim_create_autocmd('InsertLeave', {
+          callback = function()
+            vim.lsp.inlay_hint.enable(true)
+          end,
+        })
       end,
     })
 
@@ -107,8 +119,12 @@ return {
           [vim.diagnostic.severity.HINT] = '󰌶 ',
         },
       } or {},
-      virtual_lines = true,
+      -- virtual_lines = {
+      --   current_line = true,
+      -- },
+      --@type vim.diagnostic.Opts.VirtualText
       -- virtual_text = {
+      --   enabled = false,
       --   source = 'if_many',
       --   spacing = 2,
       --   format = function(diagnostic)
@@ -188,56 +204,54 @@ return {
           },
         },
       },
-      hls = {},
+
       bashls = {
         filetypes = { 'sh', 'zsh' },
       },
-      cssls = {},
-      css_variables = {},
-      cssmodules_ls = {},
+
       graphql = {},
-      docker_compose_language_service = {},
-      dockerls = {},
-      vtsls = {
-        filetypes = {
-          'javascript',
-          'javascriptreact',
-          'javascript.jsx',
-          'typescript',
-          'typescriptreact',
-          'typescript.tsx',
-        },
-        settings = {
-          complete_function_calls = true,
-          vtsls = {
-            enableMoveToFileCodeAction = true,
-            autoUseWorkspaceTsdk = true,
-            experimental = {
-              maxInlayHintLength = 30,
-              completion = {
-                enableServerSideFuzzyMatch = true,
-              },
-            },
-          },
-          typescript = {
-            tsserver = {
-              maxTsServerMemory = 8192,
-            },
-            updateImportsOnFileMove = { enabled = 'always' },
-            suggest = {
-              completeFunctionCalls = true,
-            },
-            inlayHints = {
-              enumMemberValues = { enabled = true },
-              functionLikeReturnTypes = { enabled = true },
-              parameterNames = { enabled = 'all' },
-              parameterTypes = { enabled = true },
-              propertyDeclarationTypes = { enabled = true },
-              variableTypes = { enabled = false },
-            },
-          },
-        },
-      },
+
+      -- vtsls = {
+      --   filetypes = {
+      --     'javascript',
+      --     'javascriptreact',
+      --     'javascript.jsx',
+      --     'typescript',
+      --     'typescriptreact',
+      --     'typescript.tsx',
+      --   },
+      --   settings = {
+      --     complete_function_calls = true,
+      --     vtsls = {
+      --       enableMoveToFileCodeAction = true,
+      --       -- autoUseWorkspaceTsdk = true,
+      --       experimental = {
+      --         completion = {
+      --           enableServerSideFuzzyMatch = true,
+      --         },
+      --       },
+      --     },
+      --     typescript = {
+      --       tsserver = {
+      --         maxTsServerMemory = 16384,
+      --         -- log = 'terse',
+      --       },
+      --       updateImportsOnFileMove = { enabled = 'always' },
+      --       suggest = {
+      --         completeFunctionCalls = true,
+      --       },
+      --       inlayHints = {
+      --         enumMemberValues = { enabled = true },
+      --         functionLikeReturnTypes = { enabled = true },
+      --         parameterNames = { enabled = 'all' },
+      --         parameterTypes = { enabled = true },
+      --         propertyDeclarationTypes = { enabled = true },
+      --         variableTypes = { enabled = true },
+      --       },
+      --     },
+      --   },
+      -- },
+
       eslint = {
         enable = true,
         format = { enable = true }, -- this will enable formatting
@@ -251,19 +265,21 @@ return {
           enable = true,
         },
       },
+
       sorbet = {
         cmd = { 'bundle', 'exec', 'srb', 'tc', '--lsp' },
         filetypes = { 'ruby' },
-        -- root_dir = lspconfig.util.root_pattern("Gemfile", ".git"),
+        --root_dir = lspconfig.util.root_pattern('Gemfile', '.git'),
         capabilities = capabilities,
       },
 
       rubocop = {
         cmd = { 'bundle', 'exec', 'rubocop', '--lsp', '--no-server' },
         filetypes = { 'ruby' },
-        -- root_dir = lspconfig.util.root_pattern("Gemfile", ".git"),
+        --root_dir = lspconfig.util.root_pattern('Gemfile', '.git'),
         capabilities = capabilities,
       },
+
       lua_ls = {
         settings = {
           Lua = {
@@ -279,9 +295,9 @@ return {
               enable = true,
               setType = false,
               paramType = true,
-              paramName = 'Disable',
-              semicolon = 'Disable',
-              arrayIndex = 'Disable',
+              paramName = 'Enable',
+              semicolon = 'Enable',
+              arrayIndex = 'Enable',
             },
           },
         },
@@ -304,23 +320,33 @@ return {
     local ensure_installed = vim.tbl_keys(servers or {})
     vim.list_extend(ensure_installed, {
       'stylua', -- Used to format Lua code
-      'eslint-lsp',
     })
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
+    --@type MasonLspconfigSettings
     require('mason-lspconfig').setup {
-      ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
-      automatic_installation = false,
-      handlers = {
-        function(server_name)
-          local server = servers[server_name] or {}
-          -- This handles overriding only values explicitly passed
-          -- by the server configuration above. Useful when disabling
-          -- certain features of an LSP (for example, turning off formatting for ts_ls)
-          server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-          require('lspconfig')[server_name].setup(server)
-        end,
+      dependencies = {
+        'neovim/nvim-lspconfig',
+        'mason-org/mason.nvim',
       },
+      automatic_enable = true,
+      ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
+      automatic_installation = true,
+      --handlers = {
+      -- function(server_name)
+      -- local server = servers[server_name] or {}
+      -- This handles overriding only values explicitly passed
+      -- by the server configuration above. Useful when disabling
+      -- certain features of an LSP (for example, turning off formatting for ts_ls)
+      -- server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+      -- require('lspconfig')[server_name].setup(server)
+      --end,
+      -- },
     }
+    -- Installed LSPs are configured and enabled automatically with mason-lspconfig
+    -- The loop below is for overriding the default configuration of LSPs with the ones in the servers table
+    for server_name, config in pairs(servers) do
+      vim.lsp.config(server_name, config)
+    end
   end,
 }

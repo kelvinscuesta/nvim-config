@@ -31,6 +31,7 @@ return {
         'python',
         'toml',
         'ruby',
+        'regex',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
@@ -53,9 +54,9 @@ return {
   {
     'nvim-treesitter/nvim-treesitter-context',
     event = {
-        "BufReadPost",
-        "BufWritePost",
-        "BufNewFile",
+      'BufReadPost',
+      'BufWritePost',
+      'BufNewFile',
     },
     opts = function()
       local tsc = require 'treesitter-context'

@@ -12,10 +12,17 @@ return -- lazy.nvim
         ['cmp.entry.get_documentation'] = true, -- requires hrsh7th/nvim-cmp
       },
       signature = {
-        enabled = false,
+        enabled = true,
+        auto_open = {
+          enabled = true,
+          trigger = true, -- Automatically show signature help when typing a trigger character from the LSP
+          luasnip = true, -- Will open signature help when jumping to Luasnip insert nodes
+          throttle = 100, -- Debounce lsp signature help request by 50ms
+        },
       },
       hover = {
-        enabled = false,
+        enabled = true,
+        silent = true,
       },
     },
     -- you can enable a preset for easier configuration
@@ -30,6 +37,7 @@ return -- lazy.nvim
   dependencies = {
     -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
     'MunifTanjim/nui.nvim',
+    'rcarriga/nvim-notify',
   },
   config = function(_, opts)
     -- HACK: noice shows messages from before it was enabled,

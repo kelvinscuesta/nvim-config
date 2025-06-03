@@ -26,7 +26,7 @@ return {
     --
     -- See :h blink-cmp-config-keymap for defining your own keymap
     keymap = { preset = 'default' },
-    signature = { enabled = true },
+    signature = { enabled = true, treesitter_highlighting = true, window = { show_documentation = true } },
 
     appearance = {
       use_nvim_cmp_as_default = false,
