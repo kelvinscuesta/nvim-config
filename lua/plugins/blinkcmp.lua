@@ -25,7 +25,9 @@ return {
     -- C-k: Toggle signature help (if signature.enabled = true)
     --
     -- See :h blink-cmp-config-keymap for defining your own keymap
-    keymap = { preset = 'default' },
+    keymap = {
+      preset = 'default',
+    },
     signature = { enabled = true, treesitter_highlighting = true, window = { show_documentation = true } },
 
     appearance = {
@@ -75,6 +77,7 @@ return {
           -- make lazydev completions top priority (see `:h blink.cmp`)
           score_offset = 100,
         },
+        snippets = { opts = { friendly_snippets = false } },
       },
     },
 
@@ -83,7 +86,7 @@ return {
     -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
     --
     -- See the fuzzy documentation for more information
-    fuzzy = { implementation = 'prefer_rust_with_warning' },
+    fuzzy = { implementation = 'rust' },
 
     cmdline = {
       completion = {

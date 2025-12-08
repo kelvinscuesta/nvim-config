@@ -8,7 +8,7 @@ return {
       options = {
         break_line = {
           -- Enable the feature to break messages after a specific length
-          enabled = false,
+          enabled = true,
 
           -- Number of characters after which to break the line
           after = 30,

@@ -32,6 +32,7 @@ return {
         'toml',
         'ruby',
         'regex',
+        'latex',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,

@@ -6,6 +6,7 @@ return {
   opts = {
     dashboard = { enabled = true },
     explorer = { enabled = true },
+    gitbrowse = { enabled = true },
     image = { enabled = true },
     indent = { enabled = true, animate = { enabled = false }, chunk = { enabled = true } },
     input = { enabled = true },
@@ -14,6 +15,11 @@ return {
       style = 'fancy',
     },
     picker = {
+      actions = {
+        sidekick_send = function(...)
+          return require('sidekick.cli.picker.snacks').send(...)
+        end,
+      },
       enabled = true,
       hidden = true,
       layout = {
@@ -30,6 +36,7 @@ return {
         },
         explorer = {
           hidden = true,
+          ignored = true,
           layout = {
             layout = {
               width = 0.5,

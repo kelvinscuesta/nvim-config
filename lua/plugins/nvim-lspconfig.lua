@@ -84,24 +84,23 @@ return {
         -- code, if the language server you are using supports them
         -- inlay hints
         -- This may be unwanted, since they displace some of your code
-        if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
-          map('<leader>th', function()
-            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
-          end, '[T]oggle Inlay [H]ints')
-          vim.lsp.inlay_hint.enable(true)
-        end
+        -- if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
+        --   map('<leader>th', function()
+        --     vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
+        --   end, '[T]oggle Inlay [H]ints')
+        -- end
         -- toggle inlay hints off when entering insert and toggle on when leaving
-        vim.api.nvim_create_autocmd('InsertEnter', {
-          callback = function()
-            vim.lsp.inlay_hint.enable(false)
-          end,
-        })
-
-        vim.api.nvim_create_autocmd('InsertLeave', {
-          callback = function()
-            vim.lsp.inlay_hint.enable(true)
-          end,
-        })
+        -- vim.api.nvim_create_autocmd('InsertEnter', {
+        --   callback = function()
+        --     vim.lsp.inlay_hint.enable(false)
+        --   end,
+        -- })
+        --
+        -- vim.api.nvim_create_autocmd('InsertLeave', {
+        --   callback = function()
+        --     vim.lsp.inlay_hint.enable(true)
+        --   end,
+        -- })
       end,
     })
 
@@ -211,46 +210,46 @@ return {
 
       graphql = {},
 
-      -- vtsls = {
-      --   filetypes = {
-      --     'javascript',
-      --     'javascriptreact',
-      --     'javascript.jsx',
-      --     'typescript',
-      --     'typescriptreact',
-      --     'typescript.tsx',
-      --   },
-      --   settings = {
-      --     complete_function_calls = true,
-      --     vtsls = {
-      --       enableMoveToFileCodeAction = true,
-      --       -- autoUseWorkspaceTsdk = true,
-      --       experimental = {
-      --         completion = {
-      --           enableServerSideFuzzyMatch = true,
-      --         },
-      --       },
-      --     },
-      --     typescript = {
-      --       tsserver = {
-      --         maxTsServerMemory = 16384,
-      --         -- log = 'terse',
-      --       },
-      --       updateImportsOnFileMove = { enabled = 'always' },
-      --       suggest = {
-      --         completeFunctionCalls = true,
-      --       },
-      --       inlayHints = {
-      --         enumMemberValues = { enabled = true },
-      --         functionLikeReturnTypes = { enabled = true },
-      --         parameterNames = { enabled = 'all' },
-      --         parameterTypes = { enabled = true },
-      --         propertyDeclarationTypes = { enabled = true },
-      --         variableTypes = { enabled = true },
-      --       },
-      --     },
-      --   },
-      -- },
+      vtsls = {
+        filetypes = {
+          'javascript',
+          'javascriptreact',
+          'javascript.jsx',
+          'typescript',
+          'typescriptreact',
+          'typescript.tsx',
+        },
+        settings = {
+          complete_function_calls = true,
+          vtsls = {
+            enableMoveToFileCodeAction = true,
+            autoUseWorkspaceTsdk = true,
+            experimental = {
+              completion = {
+                enableServerSideFuzzyMatch = true,
+              },
+            },
+          },
+          typescript = {
+            tsserver = {
+              maxTsServerMemory = 16384,
+              -- log = 'terse',
+            },
+            updateImportsOnFileMove = { enabled = 'always' },
+            suggest = {
+              completeFunctionCalls = true,
+            },
+            inlayHints = {
+              enumMemberValues = { enabled = true },
+              functionLikeReturnTypes = { enabled = true },
+              parameterNames = { enabled = 'all' },
+              parameterTypes = { enabled = true },
+              propertyDeclarationTypes = { enabled = true },
+              variableTypes = { enabled = true },
+            },
+          },
+        },
+      },
 
       eslint = {
         enable = true,
@@ -279,6 +278,7 @@ return {
         --root_dir = lspconfig.util.root_pattern('Gemfile', '.git'),
         capabilities = capabilities,
       },
+      ruff = {},
 
       lua_ls = {
         settings = {
