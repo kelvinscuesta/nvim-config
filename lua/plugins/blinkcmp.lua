@@ -28,7 +28,7 @@ return {
     keymap = {
       preset = 'default',
     },
-    signature = { enabled = true, treesitter_highlighting = true, window = { show_documentation = true } },
+    signature = { enabled = true, window = { treesitter_highlighting = true, show_documentation = true } },
 
     appearance = {
       use_nvim_cmp_as_default = false,
