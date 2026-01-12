@@ -282,7 +282,24 @@ return {
         --root_dir = lspconfig.util.root_pattern('Gemfile', '.git'),
         capabilities = capabilities,
       },
-      ruff = {},
+
+      basedpyright = {
+        capabilities = capabilities,
+        settings = {
+          basedpyright = {
+            analysis = {
+              typeCheckingMode = 'basic',
+              inlayHints = {
+                callArgumentNames = true,
+              },
+            },
+          },
+        },
+      },
+
+      ruff = {
+        settings = {},
+      },
 
       lua_ls = {
         settings = {
